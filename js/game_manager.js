@@ -77,7 +77,9 @@ GameManager.prototype.addRandomTile = function () {
 
 // Sends the updated grid to the actuator
 GameManager.prototype.actuate = function () {
-  if (this.storageManager.getBestScore() < this.score) {
+  // A lower score is better
+  var bestScore = this.storageManager.getBestScore();
+  if (this.score < bestScore || bestScore === 0) {
     this.storageManager.setBestScore(this.score);
   }
 
