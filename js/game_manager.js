@@ -77,24 +77,24 @@ GameManager.prototype.addRandomTile = function () {
 
   // Sends the updated grid to the actuator
 GameManager.prototype.actuate = function () {
-  // Check if the user has won
-  if (self.won === true) {
+  // this.storageManager.setBestScore(0); // reset to 0
+    // Check if the user has won
+  if (this.won) {
     // Set the best score if the current score is lower
     var bestScore = this.storageManager.getBestScore();
   
-    if (bestScore > this.score || bestScore === 0) {
+    if (bestScore > this.score || bestScore === 0 || bestScore == null || bestScore == "0") {
 	  this.storageManager.setBestScore(this.score);
     }
   }
-
-
+  
   // Clear the state when the game is over (game over only, not win)
   if (this.over) {
     this.storageManager.clearGameState();
   } else {
     this.storageManager.setGameState(this.serialize());
   }
-
+  
   this.actuator.actuate(this.grid, {
     score:      this.score,
     over:       this.over,
@@ -102,7 +102,6 @@ GameManager.prototype.actuate = function () {
     bestScore:  this.storageManager.getBestScore(),
     terminated: this.isGameTerminated()
   });
-
 };
 
 // Represent the current game as an object
@@ -175,6 +174,7 @@ GameManager.prototype.move = function (direction) {
 
           // The mighty 32 tile means the user has won
           if (merged.value === 32) self.won = true;
+          
         } else {
           self.moveTile(tile, positions.farthest);
         }
